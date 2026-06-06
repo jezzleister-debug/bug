@@ -1,0 +1,259 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>System Warning Demo</title><style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:#000;
+    color:#00ff00;
+    font-family:monospace;
+    overflow:hidden;
+}
+
+#terminal{
+    padding:20px;
+    height:100vh;
+    overflow:hidden;
+}
+
+.line{
+    margin:8px 0;
+    font-size:20px;
+}
+
+#warning{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:#500;
+    color:#fff;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    animation:flash .35s infinite;
+}
+
+@keyframes flash{
+    0%{background:#300;}
+    50%{background:#b00000;}
+    100%{background:#300;}
+}
+
+.big{
+    font-size:60px;
+    font-weight:bold;
+}
+
+.msg{
+    margin-top:25px;
+    font-size:28px;
+    padding:0 20px;
+}
+
+#count{
+    font-size:110px;
+    margin-top:20px;
+}
+
+#recovery{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:#000;
+    color:red;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+}
+
+#recovery h1{
+    font-size:55px;
+    margin:10px;
+}
+
+#recovery h2{
+    font-size:32px;
+}
+
+#progress{
+    margin-top:25px;
+    font-size:70px;
+    color:white;
+}
+</style></head>
+<body><div id="terminal"></div><div id="warning">
+    <div class="big">
+        WARNING<br>
+        WARNING<br>
+        WARNING
+    </div><div class="msg" id="alertMsg">
+    FILE IS DANGEROUS
+</div>
+
+<div id="count">10</div>
+
+</div><div id="recovery">
+    <h1>SYSTEM HAS CRASHED</h1>
+    <h2>ALL FILES CORRUPTED</h2><br>
+
+<h2>REBUILDING FILES...</h2>
+
+<div id="progress">0%</div>
+
+</div><script>
+
+const terminal = document.getElementById("terminal");
+
+const scanMessages = [
+"Initializing security scan...",
+"Scanning storage...",
+"Checking launcher...",
+"Reading system files...",
+"Inspecting installed packages...",
+"Verifying permissions...",
+"Searching for threats...",
+"Analyzing file structure...",
+"Checking application integrity...",
+"Security alert detected...",
+"Launcher response received...",
+"Reviewing critical components...",
+"Deep scan in progress...",
+"Warning condition found..."
+];
+
+let lineCount = 0;
+
+const scan = setInterval(() => {
+
+    const div = document.createElement("div");
+    div.className = "line";
+
+    div.textContent =
+        scanMessages[
+            Math.floor(
+                Math.random() * scanMessages.length
+            )
+        ];
+
+    terminal.appendChild(div);
+
+    lineCount++;
+
+    if(lineCount >= 14){
+        clearInterval(scan);
+        startWarning();
+    }
+
+}, 650);
+
+function startWarning(){
+
+    terminal.style.display = "none";
+
+    const warning =
+        document.getElementById("warning");
+
+    warning.style.display = "flex";
+
+    const alertMsg =
+        document.getElementById("alertMsg");
+
+    const warningTexts = [
+        "FILE IS DANGEROUS",
+        "LAUNCHER DETECTED A DANGEROUS FILE",
+        "WARNING WARNING WARNING",
+        "SYSTEM IS ABOUT TO CRASH",
+        "REBOOT PHONE IMMEDIATELY",
+        "CRITICAL SYSTEM FAILURE",
+        "DATA ERROR DETECTED"
+    ];
+
+    let textIndex = 0;
+
+    const textLoop = setInterval(() => {
+
+        textIndex++;
+
+        alertMsg.textContent =
+            warningTexts[
+                textIndex %
+                warningTexts.length
+            ];
+
+    }, 1200);
+
+    let seconds = 10;
+
+    const count =
+        document.getElementById("count");
+
+    count.textContent = seconds;
+
+    const timer = setInterval(() => {
+
+        seconds--;
+
+        count.textContent = seconds;
+
+        if(seconds <= 0){
+
+            clearInterval(timer);
+            clearInterval(textLoop);
+
+            count.textContent = "✖";
+
+            alertMsg.textContent =
+                "SYSTEM OFFLINE";
+
+            setTimeout(() => {
+                startRecovery();
+            }, 2000);
+        }
+
+    },1000);
+}
+
+function startRecovery(){
+
+    document.getElementById("warning")
+        .style.display = "none";
+
+    const recovery =
+        document.getElementById("recovery");
+
+    recovery.style.display = "flex";
+
+    let progress = 0;
+
+    const rebuild = setInterval(() => {
+
+        progress++;
+
+        document.getElementById("progress")
+            .textContent =
+            progress + "%";
+
+        if(progress >= 100){
+
+            clearInterval(rebuild);
+
+            document.getElementById("progress")
+                .textContent =
+                "RECOVERY COMPLETE";
+
+        }
+
+    },80);
+
+}
+
+</script></body>
+    </html>
